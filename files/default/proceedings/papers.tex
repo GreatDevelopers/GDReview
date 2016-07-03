@@ -1,0 +1,26 @@
+%\documentclass[a4]{article}
+
+% Standard LaTeX stuff
+%\usepackage{isolatin1}
+
+% DB connection, SQL queries
+\texdbconnection{MySQL,localhost,root,GndeC,MyReview}
+%\texdbconnection{File,-,-,-,/var/db/mydata/}
+\texdbdef{##q1}{select title,emailContact from Paper}{##title,##emailContact}  // Users is the table name
+%\texdbdef{##q2}{select CONCAT(Name of paper,", ",Name of author),CONCAT(Name of author," ",Name of paper) from Users}{##Name of author,##Name of paper}
+
+% Here the text begins
+\begin{document}
+This is a header for the page.
+
+What you're seeing is \LaTeX{} with a MySQL extension.\\
+
+\begin{tabular}{l l}
+
+\bf{Name of author} &  \bf{Name of paper} \\
+\texdbfor{##q1}{ ##title &  ##emailContact\\}
+
+\end{tabular}\\
+
+This is a footer for the page.
+\end{document}

@@ -1,0 +1,20 @@
+<h1>{author.ack_upload_header}</h1>
+
+<p>{author.ack_upload}</p>
+
+ <ol>
+ <!--  BEGIN FILE -->
+<li>
+  <b>{author.{RequiredFile->file_code}}</b>: 
+	{Paper->authors}
+	
+<!--    {author.file_description} -->
+</li>
+<li><b>E-mail ID:</b>{Paper->emailContact} </li>
+<li><b>Title:</b>{Paper->title} </li>
+<!-- END FILE -->
+</ol>
+<p>
+You can create a new submission or edit an existing one before <b>{Config->submissionDeadline}</b> which is last date of submission.
+<!--{author.recall_submission_deadline}-->
+</p>

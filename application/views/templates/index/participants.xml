@@ -1,0 +1,83 @@
+<h1>Participants</h1>
+
+<table cellpadding="3" cellspacing="3">
+<tr class="header">
+	<td>Participant Logo</td><td>Contact Information</td>
+</tr>
+<tr class="odd">
+<td><img src="{base_url}/images/dundee_logo.gif" height="156" width="165"/></td>
+<td><b>University of Dundee</b><br/>
+Scotland, UK<br><br/>
+<a href="http://www.dundee.ac.uk/">www.dundee.ac.uk</a>
+</td>
+</tr>
+
+<tr class="even">
+<td><img src="{base_url}/images/bits_logo.png" height="156" width="165"/></td>
+<td><b>Birla Institute of Technology and Science</b><br/>
+Pilani, India<br><br/>
+<a href="http://www.bits-pilani.ac.in/">www.bits-pilani.ac.in</a>
+</td>
+</tr>
+
+</tr>
+<tr class="odd">
+<td><img src="{base_url}/images/GNE.jpg" height="156" width="165"/></td>
+<td><b>Guru Nanak Dev Engineering College</b><br/>
+Ludhiana, India<br><br/>
+<a href="http://www.gndec.ac.in/">www.gndec.ac.in</a>
+</td>
+</tr>
+
+<tr class="even">
+<td><img src="{base_url}/images/IIT_delhi.png" height="156" width="165"/></td>
+<td><b>Indian Institute of Technology</b><br/>
+New Delhi, India<br><br/>
+<a href="http://www.iitd.ac.in/">www.iitd.ac.in</a>
+</td>
+</tr>
+
+</tr>
+<tr class="odd">
+<td><img src="{base_url}/images/mnit_logo.gif" height="156" width="165"/></td>
+<td><b>Malaviya National Institute of Technology</b><br/>
+Jaipur, India<br><br/>
+<a href="http://www.mnit.ac.in/">www.mnit.ac.in</a>
+</td>
+</tr>
+
+<tr class="even">
+<td><img src="{base_url}/images/nitj.jpg" height="156" width="165"/></td>
+<td><b>Dr. B.R. Ambedkar Institute of Technology</b><br/>
+Jalandhar, India<br><br/>
+<a href="http://www.nitj.ac.in/">www.nitj.ac.in</a>
+</td>
+</tr>
+
+</tr>
+<tr class="odd">
+<td><img src="{base_url}/images/svnit.jpg" height="156" width="165"/></td>
+<td><b>Sardar Vallabhai National Institute of Technology</b><br/>
+Surat, India<br><br/>
+<a href="http://www.svnit.ac.in/">www.svnit.ac.in</a>
+</td>
+</tr>
+
+<tr class="even">
+<td><img src="{base_url}/images/surthkal.png" height="156" width="165"/></td>
+<td><b>National Institute of Technology</b><br/>
+Surthkal, India<br><br/>
+<a href="http://www.nitk.ac.in/">www.nitk.ac.in</a>
+</td>
+</tr>
+
+</tr>
+<tr class="odd">
+<td><img src="{base_url}/images/srm.jpg" height="156" width="165"/></td>
+<td><b>SRM University</b><br/>
+Chennai, India<br><br/>
+<a href="http://www.srmuniv.ac.in/">www.srmuniv.ac.in</a>
+</td>
+</tr>
+
+</table>

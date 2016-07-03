@@ -1,0 +1,56 @@
+
+\documentclass{report}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{multicol}
+\usepackage[english]{babel}
+\usepackage[final]{pdfpages}
+\usepackage[margin=2cm,includefoot,includehead]{geometry}
+\usepackage{makeidx}
+\usepackage{index}
+\usepackage[bookmarks=yes]{hyperref}
+\usepackage{isolatin1}
+
+\makeindex
+
+
+
+
+\newindex{authors}{ax}{ad}{Index of authors}
+
+
+\includepdfset{pages=-,pagecommand={}}
+
+
+\begin{document}
+
+
+\title{ \textbf{Proceedings {CONF_NAME}}}
+\author{}
+
+
+\maketitle
+
+
+\tableofcontents
+
+
+\chapter*{Foreword}
+\addcontentsline{toc}{chapter}{Foreword}
+\textit{Please write your foreword here}
+
+
+\chapter*{Program committee}
+\addcontentsline{toc}{chapter}{Program committee}
+\begin{multicols}{2}
+\input{pc}
+\end{multicols}
+
+
+\input{papers}
+
+
+\addcontentsline{toc}{chapter}{Index of authors}
+\printindex[authors]
+
+\end{document}

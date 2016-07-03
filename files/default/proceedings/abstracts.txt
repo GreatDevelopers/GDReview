@@ -1,0 +1,102 @@
+
+01, R02, P01 : numérotation générique des communications orales, 
+réserve orales (à la suite des orales), posters
+
+
+
+Inauguration davinder snehi vigasdeep
+
+
+
+High Performance Concrete Using Admixtures
+
+
+1
+myfirst
+Pardeep Dhaliwal (GNDEC,Ludhiana)
+GNDEC,Ludhiana (India)
+
+Main part. \documentclass{article}
+\begin{document}
+This is my \emph{first} document in \LaTeX
+\end{document}
+2
+new abstract
+har singh (GNE), aman goel (PTU), kamal bedi (PTU)
+GNE (India), PTU (India), PTU (India)
+
+Main part. just another abstract...
+Precast Concrete
+
+
+3
+myfirst
+Pardeep Dhaliwal (GNDEC,Ludhiana)
+GNDEC,Ludhiana (India)
+
+Main part. \documentclass{article}
+\begin{document}
+This is my \emph{first} document in \LaTeX
+\end{document}
+4
+cvs cheatsheat
+sandeep kaur (Student)
+Student (India)
+
+Main part. CVS QUICK REFERENCE CARD
+CVS command summary 
+This list summarizes all possible cmd available. Only 
+cmd ticked with are detailed here. 
+add . . . . . . . . . . . . . . . . . . . . . . . . add new files or directories 
+  admin . . . . . . . . . . . . . control/administrate the repository 
+  checkout . . . . . . get a new sandbox from the repository 
+  commit . . . . . . . . . . . . . apply changes, additions, deletions 
+  diff . . . show differences between sandbox &amp;amp; repository 
+    export . . . . . . . . . . . . prepare copies for off-site shipment 
+      history . . . . . . . . . . show report on commands executed 
+      import . . . . . . . . . . . . incorporate a set of off-site updates 
+        init . . . . . . . . . . . . . . . . . . . . . . . . initialize a new repository 
+        log . . . . . . . . . . . . . . . . . . . . . . . show stored log information 
+        rdiff . . . . . . . . . prepare a collection of diffs as patch file 
+            release . . . . . . cancel a checkout, abandoning changes 
+            remove . . . . . . . . . . . . . . . remove files from the source tree 
+              rtag . . . . . . . . . . . . . . specify a symbolic tag for a revision 
+              status . . . . . . . . . . . . . . . . . . . .
+
+Low Carbon Cements and Concrete
+
+
+5
+testing: abstract
+Satinderpal Singh (PTU)
+PTU (India)
+
+Main part. this is only for testing purposes
+6
+tata
+snehi kumar (snehi)
+snehi (India)
+
+Main part. jklklhkjhgyuguygygvghjnlkjlkjokhjk
+Designing Reinforced Concrete for Sustainability
+
+
+7
+ukieri
+davinder kumar (tcc)
+tcc (India)
+
+Main part. mnds,mdns,dsmf,sf,smfs,mfnd,m
+8
+paper-by amrit
+amrit bhardwaj (ptu)
+ptu (India)
+
+Main part. testing purpose
+
+Efficient Structures
+
+
+Cement Combinations for Concrete Performance
+
+

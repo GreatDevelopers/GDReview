@@ -1,0 +1,496 @@
+<?php
+
+require_once ("User.php");
+require_once ("Author.php");
+require_once("Abstract.php");
+require_once("PaperQuestion.php");
+require_once("PaperAnswer.php");
+require_once("AbstractSection.php");
+
+/**
+ * This class represents a user object
+ */
+
+class PaperRow extends Zmax_Db_Table_Row_Abstract
+{
+
+  // The default behavior is to load abstract when the object is
+  // instantiated. This should not be done when may papers are
+  // selected, because it is VERY slow with Zend.
+  public static $loadAbstracts = true;
+
+  // Same thing for answers
+  public static $loadAnswers = true;
+
+  const STORE_MESSAGE_ID = 900;
+
+  /**
+   * List of messages, when errors are met
+   * @var unknown_type
+   */
+  private $_messages = array();
+
+  /**
+   * Number of the contact author
+   */
+  private $_contactAuthor;
+
+  /**
+   * The list of authors (array of objects instance of User)
+   *
+   */
+  private $_authors;
+
+  /**
+   * The list of paper questions/answers
+   */
+
+  private $_answers;
+
+  /**
+   * The list of abstract sections: an array indexed by the section name
+   */
+  private $_abstract;
+
+  /**
+   * An indicator that can be explicitly set to hide the authors
+   */
+  private $_hideAuthors;
+
+  /**
+   * Path to the directory of uploaded files
+   */
+  private $_filePath;
+
+  /**
+   * This function is executed when a Paper object is instantiated. We
+   * look for the associated object if this is an existing paper.
+   */
+  function init() {
+    $this->_authors = array();
+    $this->_answers = array();
+    $this->_abstract = array();
+
+    $this->_hideAuthors = false;
+
+    if (!empty($this->id)) {
+      $authorTbl = new Author();
+      $authors =  $authorTbl->fetchAll("id_paper='{$this->id}'", 'position ASC');
+      $i=0;
+      foreach ($authors as $author) {
+        $user =  $author->findParentUser();
+        if (!is_object($user)) {
+          echo "Unkown user in $this->id<br/>";
+        }
+        else {
+          $this->_authors[] = $user;
+          if ($this->emailContact == $user->email) {
+            $this->_contactAuthor = $i;
+          }
+        }
+        $i++;
+      }
+
+      // Fetch the answers
+      if (self::$loadAnswers) {
+        $answers = $this->findPaperAnswer();
+        foreach ($answers as $answer) {
+          $this->_answers[$answer->id_question] = $answer;
+        }
+      }
+
+      // Fetch the abstract
+      if (self::$loadAbstracts) {
+        $this->_abstract = $this->initAbstracts();
+      }
+    }
+
+    // get the default number of authors
+    $registry = Zmax_Bootstrap::getRegistry();
+    $zmax_context = $registry->get("zmax_context");
+    $config = $zmax_context->config;
+    $defaultNbAuthorsInform = $config->app->nb_authors_in_form;
+
+    // Set the file path
+    $this->_filePath = $config->app->upload_path;
+
+    // NB: the nb of authors shown is at least $defaultNbAuthorsInform, or the current number of authors
+    // if the latter is greater.
+    $this->nb_authors_in_form = max($defaultNbAuthorsInform, $this->nbAuthors());
+  }
+
+  /**
+   * Get the abstract content from the database
+   */
+  function initAbstracts()
+  {
+    // Fetch the abstract
+    $abstracts = $this->findAbstractClass();
+    $abstractList = array();
+    foreach ($abstracts as $abstract) {
+      $abstractList[$abstract->id_section] = $abstract;
+    }
+    return $abstractList;
+  }
+
+  /**
+   * Set the content of a paper from an array
+   * @input An array with all the values, including dependent rows
+   * @fullArray false if the array only contains Paper data (no authors, abstracts, etc.)
+   *
+   */
+
+  function setFromArray(&$input, $fullArray=true)
+  {
+    // OK, call the parent function, god for level-1 values
+    $this->setFilterData(true);
+    parent::setFromArray($input);
+
+    // Now set the authors and other dependent infos.
+    if ($fullArray) {
+      $this->setDependentFromArray($_POST);
+    }
+  }
+
+  /**
+   * Update the content of a paper from an array
+   * @input An array with all the values, including dependent rows
+   * @fullArray false if the array only contains Paper data (no authors, abstracts, etc.)
+   */
+
+  function updateFromArray(&$input, $fullArray=true)
+  {
+    // The paper comes from the DB. One replaces the DB values with the form input
+    $this->title = htmlSpecialChars($input['title'], ENT_NOQUOTES);
+    $this->topic = $input['topic'];
+	$this->conf_id=$input['conf_id'];
+    // Now set the authors and other dependent infos.
+    if ($fullArray) {
+      $this->setDependentFromArray($_POST);
+    }
+  }
+
+  /**
+   * Create a form to access a paper
+   *
+   */
+  function form(&$user, &$view)
+  {
+    $view->setFile ("form_submit", "form_submit.xml");
+    $view->setBlock("form_submit", "ABSTRACT", "ABSTRACTS");
+    $view->setBlock("form_submit", "FILE_UPLOAD");
+    $view->setBlock("form_submit", "AUTHOR", "AUTHORS");
+    $view->setBlock("form_submit", "QUESTION", "QUESTIONS");
+
+    $registry = Zend_registry::getInstance();
+    $config = $registry->get("Config");
+
+    // If in two phases submission: hide the upload
+    if ($config->two_phases_submission == "Y") {
+      $view->FILE_UPLOAD = "";
+    }
+
+    // Put the connected user in the form
+    $view->me_last_name = $user->last_name;
+    $view->me_first_name = $user->first_name;
+    $view->me_affiliation = $user->affiliation;
+    $view->me_email = $user->email;
+    $view->me_country = $user->country_code;
+
+    $db = Zend_Db_Table::getDefaultAdapter();
+    $user = new User();
+
+    // Get the lists of choices
+    $countryList = $db->fetchPairs ("SELECT * FROM Country");
+    // Sort the countries in alphabetical order
+    asort ($countryList, SORT_STRING);
+//$result=mysql_query("SELECT * FROM conf_name")
+//while($row=mysql_fetch_array($result))
+//$item[0].="<a href=\"".$PHP_SELF."?refNo=".$row['id']."\">".$row['name']."</a>";
+//echo $item[0];
+
+//if (isSet($input["gill"])) 
+      //$gill = $input["gill"];
+//$gill=$_POST["gill"];
+    $conf_List = $db->fetchPairs ("SELECT * FROM conf_name");
+//echo $this->conf_id;
+if(!is_null($this->conf_id)){
+	$topicList = $db->fetchPairs ("SELECT * FROM ResearchTopic where Conf_ID=".$this->conf_id);
+	$view->onload_js="<script>
+	document.form_submit.maintopic.onchange=function(){topiclist(document.form_submit.maintopic.value);}
+	</script>";
+}
+else{
+	$topicList = $db->fetchPairs ("SELECT * FROM ResearchTopic where Conf_ID=7");
+	$view->onload_js="<script>window.onload=conflist;</script>";
+
+}
+    // Produce the list of abstracts sections ordered by their position
+    $abstract = new AbstractSection();
+    $abstract->select()->order('position ASC');
+    $abstractRows = $abstract->fetchAll();
+    $view->list_abstract_ids = $separator = "";
+     
+    foreach ($abstractRows as $abstractRow) {
+      $abstractRow->putInView($view, false);
+      // Set the default value
+      if (isSet($this->_abstract[$abstractRow->id])) {
+        $view->abstract_content = $this->_abstract[$abstractRow->id]->content;
+      }
+      else {
+        $view->abstract_content = "";
+      }
+      if ($abstractRow->mandatory == 'Y') {
+        $view->abstract_mandatory = "*";
+      }
+      else {
+        $view->abstract_mandatory = "";
+      }
+      $view->list_abstract_ids .= $separator . $abstractRow->id;
+      $separator = "; ";
+      $view->append("ABSTRACTS", "ABSTRACT");
+    }
+
+    $view->topic_list =  Zmax_View_Phplib::selectField ("topic", $topicList, $this->topic);
+        $view->conf_list =  Zmax_View_Phplib::selectField ("maintopic", $conf_List, $this->conf_id);
+		    // Produce the list of fields for authors.
+    for ($i=0; $i < $this->nb_authors_in_form; $i++) {
+      if ($i % 2 == 0) $view->css_class='odd';
+      else  $view->css_class='even';
+      $view->ith = $i ;
+      $view->iplus = $i + 1;
+      $view->checked = "";
+       
+      // Take the existing author for default values
+      if ($i < $this->nbAuthors()) {
+        $author = $this->getAuthor($i);
+        if ($this->_contactAuthor == $i) {
+          $view->checked = "checked='1'";
+        }
+      }
+      else {
+        // Create an empty author
+        $author = $user->createRow();
+      }
+      $author->putInView($view);
+       
+      // Propose the list of countries
+      $view->country_list =  Zmax_View_Phplib::selectField ("country_code[$i]", $countryList,
+      $author->country_code, 1, "author_country_$i");
+
+      $view->append("AUTHORS", "AUTHOR");
+    }
+
+    // Produce the list of questions
+    $paperQuestion = new PaperQuestion();
+    $questions = $paperQuestion->fetchAll();
+    foreach ($questions as $question) {
+      $view->id_question = $question->id;
+      $view->question = $question->question_code;
+      // Get the list of choices, ordered by the position
+      $view->CHOICES = "";
+
+      $choices = $question->findPQChoice($paperQuestion->select()->order('position ASC'));
+      $choicesList = array();
+      $defaultChoice = "";
+      foreach ($choices as $choice) {
+        $choicesList[$choice->id_choice] = $choice->choice;
+        if (empty($defaultChoice)) $defaultChoice = $choice->id_choice;
+
+        // Check whether this is the default choice
+        if (isSet($this->_answers[$question->id])) {
+          if ($this->_answers[$question->id]->id_answer == $choice->id_choice) {
+            $defaultChoice = $choice->id_choice;
+          }
+        }
+      }
+      $view->CHOICES = Zmax_View_Phplib::checkboxField ("radio", "answers[$question->id]",
+      $choicesList, $defaultChoice, array("length" => 5));
+      $view->append("QUESTIONS", "QUESTION");
+    }
+
+    // Put the values in the view
+    $this->putInView($view, false);
+
+    // Note: make a double assignment, to translate text code which are
+    // dynamically generated
+    $view->assign("form_result1", "form_submit");
+    $view->assign("form_result2", "form_result1");
+    return $view->form_result2;
+  }
+
+
+  /** Check the infos about a paper before inserting
+   */
+
+  function checkRequest ($connectedUser, $file, $fileRequired, &$texts)
+  {
+    $configTble = new Config();
+    $config = $configTble->fetchAll()->current();
+
+    $this->_messages = array();
+
+    // Some tests...
+    if (empty ($this->title))  {
+      $this->_messages[] = $texts->author->missing_title;
+    }
+
+    // Check that the topic is not null or blanck
+    if (empty($this->topic))  {
+      $this->_messages[] =  $texts->author->missing_topic;
+    }
+
+    // Check the abstract. Loop on the abstract structure, and check that
+    // each abstract section is filled if it is mandatory.
+    $abstractStruct = new AbstractSection();
+    $abstractStruct->select()->order('position ASC');
+    $abstractStructRows = $abstractStruct->fetchAll();
+    $countWords = 0;
+    foreach ($abstractStructRows as $abstractStructRow) {
+      if (!isSet($this->_abstract[$abstractStructRow->id])) {
+        // This section should exist
+        $this->_messages[] =  $texts->author->missing_abstract_section;
+      }
+      else {
+        $this->_abstract[$abstractStructRow->id]->content = trim($this->_abstract[$abstractStructRow->id]->content);
+        if ($abstractStructRow->mandatory=="Y" and empty($this->_abstract[$abstractStructRow->id]->content)) {
+          $this->_messages[] =  $texts->author->abstract_section_empty . ": " .
+               "{author." . $abstractStructRow->section_name. "}";
+        }
+        // Count the number of words
+        $countWords += str_word_count($this->_abstract[$abstractStructRow->id]->content);
+      }
+    }
+     
+    // echo "Nb words = $countWords<br/>";
+    if ($countWords > $config->max_abstract_size) {
+      $this->_messages[] =  $texts->author->abstract_too_long . " ($countWords > $config->max_abstract_size)";
+    }
+
+    // Check the authors
+    $found = false;
+    $nbAuthors = $this->nbAuthors();
+    if ($nbAuthors == 0) {
+      $this->_messages[] = $texts->author->missing_authors;
+    }
+
+    $connUserPresent = false;
+    $mailAuthors = array();
+    for ($i=0; $i < $nbAuthors; $i++) {
+      $author = $this->getAuthor($i);
+      // Do not check the city and zip code for simple authors
+      $messages = $author->checkValues($texts, array("address", "city", "zip_code"));
+      foreach ($messages as $message) {
+        $iplus = $i+1;
+        $this->_messages[] = "(" . $texts->author->author .  " $iplus) - " . $message;
+      }
+
+      $mailAuthors[$author->email] = 1;
+
+      // Check whether this is the connected user
+      if ($author->email == $connectedUser->email)  $connUserPresent = true;
+    }
+
+    // Check that the same author is not reported twice: compare the number of email
+    // to the number of authors (who can do better? Find a nice PHP function)
+    if (count($mailAuthors) != count($this->_authors)) {
+      $this->_messages[] =  $texts->author->duplicate_authors;
+    }
+
+    // Test: the connected user must be part of the author list
+    if (!$connUserPresent) {
+      $this->_messages[] = $texts->author->user_mandatory;
+    }
+
+    // Test: at least one contact author
+    if ($this->_contactAuthor < 0 ) {
+      $this->_messages[] =  $texts->author->missing_contact_author;
+    }
+
+    // Test: the file is provided (if required)
+    if ($fileRequired) {
+
+        if (!is_uploaded_file ($file['tmp_name'])) {
+        $this->_messages[] = $this->uploadError ($file, $texts);
+      }
+      else {
+        // Check the PDF format (always in lowercase)
+        $ext = substr($file['name'], strrpos($file['name'], '.') + 1);
+        if (strToLower($ext) != "pdf")
+        $this->_messages[]=  $texts->author->invalid_format
+        . " (extension:$ext, format:" . $paper['format'] . ")";
+      }
+    }
+
+    // There should be no message
+    if (count($this->_messages) > 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+  /**
+   *  Write a paper in the DB with all its dependent objects
+   *
+   */
+
+  function saveAll()
+  {
+    $db = Zend_Db_Table::getDefaultAdapter();
+
+    // Remove invalid characters
+    $this->title = Config::removeMSQuotes(trim($this->title));
+    $this->title =  preg_replace("/[\n\r]/","", $this->title);
+
+    // First save the paper
+    $this->save();
+
+    // Save abstracts. Be very careful not to erase something
+    $currentAbstracts = $this->initAbstracts();
+    $asbtractSectionTbl = new AbstractSection();
+    $abstractSections = $asbtractSectionTbl->fetchAll();
+     
+    foreach ($abstractSections as $abstractSection) {
+      if (isSet($this->_abstract[$abstractSection->id])) {
+        $abstract = $this->_abstract[$abstractSection->id];
+        $abstract->content = Config::removeMSQuotes(trim($abstract->content));
+        $abstract->content = htmlSpecialChars ($abstract->content, ENT_NOQUOTES);
+        
+        // Do not store optional and empty abstracts
+        if (empty($abstract->content) and $abstractSection->mandatory=='N') continue;
+        if (isSet ($currentAbstracts[$abstractSection->id])) {
+          // Already in the DB: just update
+          $currentAbstracts[$abstractSection->id]->content = $abstract->content;
+          $currentAbstracts[$abstractSection->id]->save();
+        }
+        else {
+          // This is a new row
+          $abstract->id_paper = $this->id;
+          $abstract->save();
+        }
+      }
+    }
+     
+    // Clean the Author table for this paper.
+    $db->query("DELETE FROM Author WHERE id_paper='{$this->id}'");
+
+    // OK, now save the authors
+    $user = new User();
+    $authorTble = new Author();
+
+    $i=0;
+    //     echo "Contact author: " . $this->_contactAuthor . "<br/>";
+
+    foreach ($this->_authors as $author) {
+      // Check that the user does not already exist
+      $existingAuthor = $user->findByEmail($author->email);
+      if (is_object($existingAuthor)) {
+        // Change the values with those obtained from the form
+        $existingAuthor->last_name = $author->last_name;
+        $existingAuthor->first_name = $author->first_name;
+        $existingAuthor->affiliation = $author->affiliation;
+        $existingAuthor->country_code = $author->country_code;
+
+        // M

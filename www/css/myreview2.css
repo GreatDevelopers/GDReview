@@ -1,0 +1,412 @@
+/*
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+*/
+
+body {
+	margin: 20px;								/*formatting of text*/
+	background: #000000;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #787878;
+}
+
+h1, h2, h3 {									/*formatting of headings*/
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+	color: #000000;
+}
+
+h1 {										/*headings inside the links in left pnnel*/
+	font-size: 2em;
+}
+
+h2 {										/*headings in the right pannel */
+	font-size: 1.6em;
+}
+
+h3 {										/*headings in the left pnnel*/
+	margin-top: 10px;
+		font-size: 1.2em;
+}
+
+p, ul, ol {
+	margin-top: 0;							/*top margin of the text in right pannel*/
+	line-height: 150%;						/*line height or line width*/
+}
+
+ul, ol {						/*formatting of text in left pannel and numbered lines in right pannel*/
+}
+
+a {									/*formatting of links in right pannel, their first look*/
+	text-decoration: none;
+	border-bottom: 1px dotted #999999;
+	color: #0A0A0A;
+}
+
+a:hover {
+	background: none;
+}
+
+#wrapper {								/*formatting of background of body , i.e. white background*/
+	width: 1100px;				
+	margin: 0 auto;
+	padding: 20px;
+	background: #FFFFFF;
+}
+
+/* Header */
+
+#header {					/*formatting of background part of main picture , i.e. behind the main picture*/
+	width: 1100px;
+	height: 78px;
+	margin: 0 auto;
+/*	background-size: 1100px;*/
+	
+}
+
+/*
+ Old myreview settings: do better 
+ 
+h1 {color: #FF6600}
+h2 {color: #FF6600}
+h3 {color: #FF6600}
+*/
+th.header {background-color:#565F68; color:white; text-align:left}
+tr.header {background-color:#565F68; color:white; text-align:left}
+tr.odd {background-color:#eeeeee}
+tr.even {background-color:#dddddd}
+
+/* Logo */
+
+#logo {									/*logo is the main picture on all pages*/
+	float: left;
+	width: 640px;
+	color: #000000;
+	
+}
+
+#logo td {								/*formatting of the text on the main picture on all pages*/
+	text-align: right;
+/*	padding: 65px 0 0 20px;
+	letter-spacing: -1px;*/
+	font-size: 200%;
+	color: red;
+}
+
+ #logo table{						/*table containing conf_Name, conf_theme, conf_location in mreview2.xml*/
+width: 1100px;
+       height: 130px;
+	background:#D3D3D3;
+}
+
+.headh1 {
+        color:red;
+        font-size:120%;
+        text-align:right;
+	padding:0px 0px 3px 0px;
+}
+
+.headh2{
+        color:red;
+        font-size:60%;
+        text-align:right;
+}
+
+.uccLogo
+{
+float:left;
+padding:15px 0px 0px 3px;
+}
+#logo p {
+	float: left;
+	padding: 0px 0 0 -0px;
+	text-transform: uppercase;
+	font: bold 14px Arial, Helvetica, sans-serif;	
+	color: #FFFFFF;
+} 
+
+#logo a {
+	border: none;
+	background: none;
+	text-decoration: none;
+	color: #FFFFFF;
+}
+
+
+/* Logo 2 */
+
+#logo2 {
+	padding: 25px 0 0 20px;
+	letter-spacing: -1px;
+	text-transform: uppercase;
+	font-size: 2.6em;
+	color: #FFFFFF;
+}
+
+/* Search */
+
+#search {
+	margin-top: 50px;
+		float: right;
+		width: 230px;
+	padding-top: 30px;
+	color: #FFFFFF;
+}
+
+#search form {
+	height: 41px;
+	margin: 0;
+	padding: 90px 0 0 0px;
+}
+
+#search a {
+	font: bold 1.2em Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+}
+
+#search fieldset {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+#search-text {
+	width: 250px;
+	border: none;
+	text-transform: lowercase;
+	border: 1px #525252 dotted;
+	font: bold 1.2em Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+}
+
+#search-submit {
+	display: none;
+}
+
+/* Menu */
+
+#menu {									/*formatting of the language selection bar on all pages*/
+  width: 1100px;
+	height: 30px; /* 50px; */
+	margin: 45px auto 0;
+	padding: 15px 0 0 0;
+	border-top: 5px #FFFFFF solid;
+	background: black;
+}
+
+#menu ul {
+	margin: 0;
+	padding: 10;
+	list-style: none;
+	line-height: normal;
+}
+
+#menu li {
+	float: left;
+}
+
+#menu a {
+	padding: 5px 0px 10px 20px;
+	text-transform: uppercase;
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	border: none;
+	
+}
+
+#menu a:hover, #menu .current_page_item a {
+	color: #FFFFFF;
+}
+
+#menu a:hover {
+	text-decoration: underline;
+}
+
+/* Page */
+
+#page {
+	width: 1100px;
+	margin: 0 auto;
+}
+
+/* Content */
+
+#content {							/*formatting of main content i.e. text on all pages */
+	float:right;
+	width: 800px;
+	padding: 35px 20px 0 0;
+/*	 margin-top:150px\9;  */
+}
+
+.post {
+}
+
+.post .title {
+	color: #000000;
+}
+
+.post .title a {
+	background: none;
+	color: #000000;
+	border: none;
+}
+
+.post .title a:hover {
+	text-decoration: underline;
+}
+
+.post .meta {
+	border-bottom: 1px dashed #D2D4C9;
+	text-transform: uppercase;
+	text-align: left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+}
+
+.post .entry {
+	padding: 10px 0 20px 0;
+	text-align: justify;
+}
+
+/* Sidebar */
+
+#sidebar {									/*formatting of left pannel*/
+	float: left;
+	width: 220px;
+	padding: 40px 0 0 10px;
+	color: #787878;	
+/* hack IE*/
+            /*    margin-top:  150px\9;*/
+}
+
+#sidebar ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#sidebar li {
+}
+
+#sidebar li ul {
+	padding-bottom: 5px;
+}
+
+#sidebar li li {
+	line-height: 25px;
+	border-bottom: 1px dashed #D2D4C9;
+}
+
+#sidebar h2 {
+	letter-spacing: -.5px;
+	color: #000000;
+	padding-bottom: 10px;
+	}
+
+#sidebar p {
+	padding-bottom: 20px;
+	text-align: justify;
+}
+
+#sidebar a {
+	color: #787878;
+	border: none;
+}
+
+#sidebar a:hover {
+	text-decoration: underline;
+	color: #787878;
+}
+
+/* Calendar */
+
+#calendar {
+}
+
+#calendar_wrap {
+	padding: 20px;
+}
+
+#calendar table {
+	width: 100%;
+}
+
+#calendar tbody td {
+	text-align: center;
+}
+
+#calendar #next {
+	text-align: right;
+}
+
+/* Footer */
+
+#footer {								/*formatting of footer part i.e. "Free Css Templates"*/
+	width: 1100px;
+	height: 75px;
+	margin: 0 auto;
+	padding: 10px 0 15px 0;
+	background: black;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #B2B2B2;
+	
+}
+
+#footer p {
+	margin: 0;
+	line-height: normal;
+	font-size: 9px;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+#footer a {
+	color: #FFFFFF;
+}
+
+.sponsors
+	{
+	padding: 0px 10px 0px 0px;
+	height:70px; 
+	width:160px;
+	}
+
+/*FOLLOWING IS THE CSS CODE OF SLIDING LOGOS*/
+
+
+
+
+
+/* js-disabled class - set image sizes so they all fit in the viewer */
+.js-disabled img { width:100px; height:100px; display:block; float:left; margin:30px 0 0; }
+
+/*#outerContainer { width:542px; height:202px; margin:auto; position:relative; }
+*/
+#imageScroller { max-width:100%; height:75px; margin: 0 auto; padding: 1px 0 10px 0;position:relative; background:#000000 url({base_url}/images/imageScrollerBG.png) no-repeat; }
+
+#viewer { max-width:100%; height:182px; overflow:hidden; margin:auto; position:relative; top:1px; }
+
+#imageScroller a:active, #imageScroller a:visited { color:#000000; }
+
+#imageScroller a img { border:0; }
+
+#controls { width:534px; height:47px; background:url(images/controlsBG.png) no-repeat; position:absolute; top:4px; left:4px; z-index:10;	}
+
+#controls a { width:37px; height:35px; position:absolute; top:3px; }
+
+#controls a:active, #controls a:visited { color:#0d0d0d; }
+
+#title { color:#ffffff; font-family:arial; font-size:100%; font-weight:bold; width:100%; text-align:center; margin-top:10px; }
+
+#rtl { background:url(images/rtl.png) no-repeat; left:100px; }
+
+#rtl:hover { background:url(images/rtl_over.png) no-repeat; left:99px; }
+
+#ltr { background:url(images/ltr.png) no-repeat; right:100px; }
+
+#ltr:hover { background:url(images/ltr_over.png) no-repeat; }
